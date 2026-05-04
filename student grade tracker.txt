@@ -1,0 +1,134 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Student {
+    int id;
+    String name;
+    String subject;
+    double marks;
+
+    Student(int id, String name, String subject, double marks) {
+        this.id = id;
+        this.name = name;
+        this.subject = subject;
+        this.marks = marks;
+    }
+}
+
+public class Main {
+
+    static ArrayList<Student> students = new ArrayList<>();
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n--- Student Grade Tracker ---");
+            System.out.println("1. Add Student");
+            System.out.println("2. View Students");
+            System.out.println("3. Delete Student");
+            System.out.println("4. Summary");
+            System.out.println("5. Exit");
+
+            int choice = safeIntInput(sc);
+
+            switch (choice) {
+                case 1:
+                    addStudent(sc);
+                    break;
+                case 2:
+                    viewStudents();
+                    break;
+                case 3:
+                    deleteStudent(sc);
+                    break;
+                case 4:
+                    showSummary();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice");
+            }
+        }
+    }
+
+    
+    static int safeIntInput(Scanner sc) {
+        while (!sc.hasNextInt()) {
+            System.out.println(" Please enter a valid number:");
+            sc.next(); // discard wrong input
+        }
+        return sc.nextInt();
+    }
+
+    
+    static double safeDoubleInput(Scanner sc) {
+        while (!sc.hasNextDouble()) {
+            System.out.println(" Please enter a valid marks (number):");
+            sc.next();
+        }
+        return sc.nextDouble();
+    }
+
+    static void addStudent(Scanner sc) {
+        System.out.print("Enter ID: ");
+        int id = safeIntInput(sc);
+        sc.nextLine(); // clear buffer
+
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter Subject: ");
+        String subject = sc.nextLine();
+
+        System.out.print("Enter Marks: ");
+        double marks = safeDoubleInput(sc);
+
+        students.add(new Student(id, name, subject, marks));
+        System.out.println("Student Added!");
+    }
+
+    static void viewStudents() {
+        if (students.isEmpty()) {
+            System.out.println("No students found.");
+            return;
+        }
+
+        for (Student s : students) {
+            System.out.println(s.id + " | " + s.name + " | " + s.subject + " | " + s.marks);
+        }
+    }
+
+    static void deleteStudent(Scanner sc) {
+        System.out.print("Enter ID to delete: ");
+        int id = safeIntInput(sc);
+
+        students.removeIf(s -> s.id == id);
+        System.out.println(" Deleted (if existed).");
+    }
+
+    static void showSummary() {
+        if (students.isEmpty()) {
+            System.out.println("No data available.");
+            return;
+        }
+
+        double sum = 0;
+        double highest = students.get(0).marks;
+        double lowest = students.get(0).marks;
+
+        for (Student s : students) {
+            sum += s.marks;
+            if (s.marks > highest) highest = s.marks;
+            if (s.marks < lowest) lowest = s.marks;
+        }
+
+        double avg = sum / students.size();
+
+        System.out.println(" Average: " + avg);
+        System.out.println(" Highest: " + highest);
+        System.out.println(" Lowest: " + lowest);
+    }
+}
